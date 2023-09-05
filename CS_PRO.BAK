@@ -1,0 +1,436 @@
+#include<fstream.h>
+#include<string.h>
+#include<conio.h>
+#include<stdio.h>
+#include<process.h>
+
+class participant
+{ int score ;
+  char name[20];
+ public:  int age;
+       participant()
+       { score = 0;
+	 age = 0;
+	}
+       void getdata()
+     { cout<<"\n Enter Name = ";
+       gets(name);
+       cout<<"\n Enter age(should be more than 10) = ";
+       cin>>age;
+     }
+      void dispscore()
+     { cout<<"\n Your Score : "<<score;
+      }
+      void correct()
+      {
+	score+=10;
+	 }
+      void wrong()
+      {
+	 score-=2;
+	  }
+ };
+ void eligibility(int a)
+ {   if (a<=9)
+   {    cout<<"\n Not Eligible ";
+	getch();  exit(0);
+      }
+  }
+ int login(int a)
+ {  int e,c=0;
+    if (a==1)
+   {   ifstream f;
+      char u[20];
+      label:   char pa[20];
+      cout<<"\n Username : "; gets(u);
+      e = strcmp(u,"USERNAME");
+      f.open("PASS.txt",ios::in);
+      f.getline(pa,20);
+      if(e==0)
+      {  f: int w;
+	  char p[20];
+
+       cout<<"\n Password : ";
+	int i; char ch;
+	for(i=0; ; )
+	{ ch = getch();
+	if( (ch>='a'&& ch<='z' ) || (ch>='A' && ch<='Z') || (ch>='0'&& ch<='9') )
+	{  p[i]=ch;
+	   i++;
+	  printf("*");
+	  }
+	 if(ch=='\b' && i>=1)
+	{   cout<<"\b \b";
+	   --i;
+	   }
+	if(ch=='\r')
+	{ p[i]='\0';
+	   break;
+	 }
+       }
+
+       w = strcmp(p,pa);
+
+       if(w == 0)
+       { textcolor(GREEN);
+	cout<<endl;
+	cprintf(" ACCESS  GRANTED");
+	textcolor(WHITE);
+	getch();
+	return 1;
+	  }
+      else
+      { textcolor(RED);
+	 cout<<endl;
+	 cprintf(" WRONG  PASSWORD");
+	if (c==0)
+	{ ++c;
+	 cout<<"\n Maximum try again 1 ";
+	 goto f;
+	}
+	else
+       { getch(); exit(0); }
+	}
+    }
+     else
+    {
+     textcolor(RED);
+     cout<<endl;
+     cprintf(" Wrong Username ");
+     cout<<endl;
+     textcolor(WHITE);
+     goto label;
+	 }  f.close();
+   }  return 0;
+       }
+
+
+ int changepass(int a)
+ {
+    ofstream f2;
+    f2.open("temp3.txt",ios::out);
+    int w,r=0; char p[20],p1[20];
+    z:
+    if(a==1)
+    {
+      if(r==0)
+      cout<<"\n Enter NEW Password : ";
+      else if(r==1)
+      cout<<"\n Enter CONFIRM Password : ";
+
+      int i; char ch;
+      for(i=0; ; )
+      { ch = getch();
+      if( (ch>='a'&& ch<='z' ) || (ch>='A' && ch<='Z') || (ch>='0'&& ch<='9') )
+       {  if(r==0)
+	  p[i]=ch;
+	  else if (r==1)
+	  p1[i]=ch;
+	  i++;
+	  printf("*");
+	 }
+       if(ch=='\b' && i>=1)
+      {   cout<<"\b \b";
+	   --i;
+	   }
+       if(ch=='\r')
+      {  if(r==0)
+	 p[i]='\0';
+	 else if(r==1)
+	 p1[i]='\0';
+	   break;
+	 }
+	 }
+     ++r;
+     if(r==1)
+      goto z;
+     w = strcmp(p,p1);
+     if(w==0)
+    {
+      f2<<p;
+      f2.close();
+      remove("PASS.TXT");
+      rename("TEMP3.TXT","PASS.TXT");
+      return -1;
+     }
+
+    }
+     return 0;
+     }
+
+  int pass(int a)
+  {  int e=0,c=0; char pa[20];
+    ifstream f;
+    f.open("PASS.txt",ios::in);
+    f.getline(pa,20);
+    if (a==1)
+     {  f:
+	char p[20]; int w;
+	cout<<"\n Enter OLD Password : ";
+	int i; char ch;
+	for(i=0; ; )
+	{ ch = getch();
+	if( (ch>='a'&& ch<='z' ) || (ch>='A' && ch<='Z') || (ch>='0'&& ch<='9') )
+	{  p[i]=ch;
+	   i++;
+	  printf("*");
+	  }
+	 if(ch=='\b' && i>=1)
+	{   cout<<"\b \b";
+	   --i;
+	   }
+	if(ch=='\r')
+	{ p[i]='\0';
+	   break;
+	 }
+       }
+
+       w = strcmp(p,pa);
+
+       if(w == 0)
+       { cout<<"\n OLD Password : ";
+	 textcolor(GREEN);
+	 cprintf("MATCH");
+	 textcolor(WHITE);
+	 getch();
+	 e= 1;
+	  }
+      else
+      {  textcolor(RED);
+	 cout<<endl;
+	 cprintf(" Password NOT MATCH ");
+	if (c==0)
+	{ ++c;
+	 cout<<"\n Maximum try again 1 ";
+	 goto f;
+	}
+	else
+       { getch(); exit(0); }
+	}
+    }   else
+	e=0;
+	f.close();
+       return e;
+
+	 }
+
+ void main()
+  { ifstream fin1,fin2,fin3,fin4,fi1;
+     ofstream fina,finb,fin5,fin6;
+    fin1.open("Ques.txt",ios::in);
+    fin2.open("Ans.txt",ios::in);
+    const int j=1;
+   conti:
+   clrscr();
+   char ans; int a, quesno = 0;
+   participant p1;
+   cout<<"\n WELCOME \n";
+   cout<<"\n 1. Play THE GRAND QUIZ ";
+   cout<<"\n 2. Login  ";
+   cout<<"\n 3. EXIT  \n ";
+   cin>>a;
+   switch(a)
+   {
+     case 1:  clrscr();
+	      p1.getdata();
+	      eligibility(p1.age);
+
+	      clrscr();
+	      cout<<"\n Welcome to The GRAND QUIZ \n";
+
+	      cout<<"\n In this Quiz, you will be asked questions & you will be given 4 choices out of  which only 1 is correct. \n";
+	      cout<<"\n There will be 10 questions in this quiz and you will be AWARDED 10 points for   each CORRECT answer and -2 for each WRONG answer \n";
+	      cout<<"\n \n ARE YOU READY!![y/n]";
+	      cin>>ans;
+	      if(ans== 'y' || ans== 'Y')
+	      { cout<<"\n Let's Start!! \n";
+	       }
+	     else
+	      { getch(); exit(1); }
+
+	     char ques[400],q[400],qu[400],choice;
+
+	     while( !fin1.eof() && !fin2.eof())
+	     {
+	       quesno++;
+
+	       fin1.getline(ques,'?');
+	       cout<<"\n Q."<<quesno<<" - "; puts(ques);
+	       fin1.getline(qu,400);
+	       cout<<"       "; puts(qu);
+	       fin1.getline(q,400);
+	       cout<<"       "<<q;
+	       fin2>>ans;
+	       cout<<"\n ans:";
+	       cin>>choice;
+
+	       if(choice == ans)
+	       { textcolor(GREEN);
+		 cprintf("Correct");
+		 textcolor(WHITE);
+		 p1.correct();
+		}
+		else
+	       {  textcolor(RED);
+		 cprintf("Wrong");
+		   textcolor(WHITE);
+		 p1.wrong();
+		   }
+		}
+		cout<<"\n";
+		p1.dispscore();
+
+		fin1.close();
+		fin2.close();
+
+		break;
+
+    case 2:    clrscr(); int e,c=0,p1;
+		p1 = login(j);
+		if(p1==1)
+		{  a:
+		  clrscr();
+		  cout<<"\n 1. ADD Questions ";
+		  cout<<"\n 2. DELETE Questions  ";
+		  cout<<"\n 3. DISPLAY All Questions ";
+		  cout<<"\n 4. Change Password ";
+		  cout<<"\n 5. Log out \n ";
+
+		  cin>>e;     clrscr();
+		  switch(e)
+		  {
+		     case 1 :  char o[10];
+			       fin5.open("Ques.txt",ios::app);
+			       fin6.open("Ans.txt",ios::app);
+			       add:
+			       cout<<"\n Enter Question \n \n ";
+			       gets(ques);
+			       fin5<<"\n"<<ques<<" ? \n";
+			       cout<<"\n Enter option a = "; gets(o);
+			       fin5<<"a) "<<o<<"\t";
+			       cout<<"\n Enter option b = "; gets(o);
+			       fin5<<"b) "<<o<<"\n";
+			       cout<<"\n Enter option c = "; gets(o);
+			       fin5<<"c) "<<o<<"\t";
+			       cout<<"\n Enter option d = "; gets(o);
+			       fin5<<"d) "<<o<<"\t";
+			       cout<<"\n Enter Answer = "; cin>>ans;
+			       fin6<<ans;
+			       cout<<"\n Want to add more ? "; cin>>ans;
+			       if(ans=='y' || ans == 'Y')
+				 goto add;
+				 fin5.close();
+				 fin6.close();
+				 break;
+
+		     case 2 :  char n;   c=0;
+			       fin3.open("Ques.txt",ios::in);
+			       fin4.open("Ans.txt",ios::in);
+			       fina.open("temp1.txt",ios::out);
+			       finb.open("temp2.txt",ios::out);
+			       while(!fin3.eof() && !fin4.eof())
+			       {
+
+				 char qus[400],op1[400],op2[400],ans1;
+				 fin3.getline(qus,'?');
+				 cout<<"\n Q."<<qus;
+				 fin3.getline(op1,400);
+				 cout<<"\n       "<<op1;
+				 fin3.getline(op2,400);
+				 cout<<"\n       "<<op2;
+
+				 fin4>>ans1;
+				 cout<<"\n Want to Delete this Question{y/n} ?  ";
+				 cin>>n;
+				 if(n == 'n' || n == 'N')
+				 {
+				   if(c != 0)
+				   fina<<"\n"<<qus;
+				   else
+				   fina<<qus;
+				   c++;
+
+				   fina<<"\n"<<op1;
+				   fina<<"\n"<<op2;
+
+
+				  finb<<ans1;
+				  }//if end
+		     }//while end
+
+				   fin3.close();
+				   fin4.close();
+				   fina.close();
+				   finb.close();
+				   remove("Ques.txt");
+				   remove("Ans.txt");
+				   rename("temp1.txt","Ques.txt");
+				   rename("temp2.txt","Ans.txt");
+				   break;
+
+		       case 3 :    fi1.open("Ques.txt",ios::in);
+				   quesno=0;  char r[400],t[400],y[400];
+				   while( !fi1.eof())
+				 {
+				   quesno++;
+
+				   fi1.getline(r,'?');
+				   cout<<"\n Q."<<quesno<<" - "; puts(r);
+				   fi1.getline(t,400);
+				   cout<<"       "; puts(t);
+				   fi1.getline(y,400);
+				   cout<<"       "<<y;
+				   getch();
+				 }
+				   fi1.close();
+				   break;
+
+		       case 4 :  int pp;
+				 pp = pass(j);
+				 if(pp==1)
+				 pp=changepass(j);
+
+				 if(pp==-1)
+				{ cout<<"\n Password Changed : " ;
+				  textcolor(GREEN);
+				   cprintf(" SUCCESSFUL ");
+				   textcolor(WHITE);
+				   getch();
+				 }
+				  else
+				 { textcolor(RED);
+				  cout<<endl;
+				  cprintf(" ERROR ");
+				  cout<<endl;
+				  cprintf(" Password NOT MATCH");
+				  textcolor(WHITE);
+				  getch();
+
+				  }goto a;
+
+		       case 5 :
+				goto conti;
+
+
+				 } //end of switch 2
+		       cout<<"\n Want to conti ? "; cin>>ans;
+		       if(ans=='y' || ans == 'Y')
+		       goto a;
+			  }//end of if
+			  break;
+
+     case 3 : exit(0);
+
+     }            // end of switch 1
+
+
+      cout<<"\n Want to conti ? "; cin>>ans;
+      if(ans=='y' || ans == 'Y')
+      goto conti;
+      getch();
+      }//end of main
+
+
+
+
+
